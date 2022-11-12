@@ -61,7 +61,7 @@ func hexToBinary(data string) []int {
 }
 
 func main() {
-	fmt.Println("My First Blockchain Program")
+	fmt.Println("Proof of Work : Blockchain")
 	block_data := []string{"My Name is Suraj Joshi", "Learning BloakChain", "With Golang"}
 	time := time.Now().String()
 	blocks := list.New()
@@ -77,12 +77,22 @@ func main() {
 		prevHash_value := addBlock(prevHash.Value.(addBlock))
 		new_hash := string(hashGenerator(block_data[i], time, strconv.Itoa(nounce), strconv.Itoa(difficulty)))
 		new_hash_binary := hexToBinary(new_hash)
-		for strings.Index(strconv.Itoa(new_hash_binary[0]), strings.Repeat("0", difficulty)) != 0 {
+		new_hash_string := ""
+		for _, i := range new_hash_binary {
+			new_hash_string = new_hash_string + strconv.Itoa(i)
+		}
+		//fmt.Println(new_hash_string)
+		for strings.Index(new_hash_string, strings.Repeat("0", difficulty)) != 0 {
 			nounce += 1
 			new_hash = string(hashGenerator(block_data[i], time, strconv.Itoa(nounce), strconv.Itoa(difficulty)))
-			fmt.Println("count: 3: ", new_hash)
+			new_hash_binary = hexToBinary(new_hash)
+			new_hash_string := ""
+			for _, i := range new_hash_binary {
+				new_hash_string = new_hash_string + strconv.Itoa(i)
+			}
 		}
-		fmt.Println("New Block")
+		fmt.Println("Iterations Taken to add new Block: ", nounce)
+		fmt.Println("New Block Hash ---->  ", new_hash_binary)
 		new_block := addBlock{timestamp: time, data: block_data[i], hash: new_hash, lastHash: prevHash_value.hash, nounce: strconv.Itoa(nounce), difficulty: strconv.Itoa(difficulty)}
 		blocks.PushBack(new_block)
 
